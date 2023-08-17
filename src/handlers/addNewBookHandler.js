@@ -19,7 +19,7 @@ const addNewBookHandler = async (request, h) => {
     const message = !name ?
       'Gagal menambahkan buku! Mohon isi nama buku!' :
       // eslint-disable-next-line max-len
-      'Gagal menambahkan buku! readPage tidak boleh lebih besar dari pageCount!';
+      'Gagal menambahkan buku! readPage tidak boleh lebih besar dari pageCount';
     return getFailedResponseWithMessage(h, message, 400);
   }
   let nanoid;
@@ -55,14 +55,14 @@ const addNewBookHandler = async (request, h) => {
   if (books.length === newLength) {
     return getSuccessResponseWithMsgAndData(
         h,
-        'Buku berhasil ditambahkan!',
+        'Buku berhasil ditambahkan',
         {bookId: id},
         201,
     );
   }
   return h.response({
     status: 'error',
-    message: 'Catatan gagal ditambahkan!',
+    message: 'Catatan gagal ditambahkan',
   }).code(500);
 };
 

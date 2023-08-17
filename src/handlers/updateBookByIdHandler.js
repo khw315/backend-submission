@@ -18,15 +18,15 @@ const updateBookByIdHandler = (request, h) => {
   } = request.payload;
   if (!name || readPage > pageCount) {
     const message = !name ?
-      'Gagal memperbarui buku! Mohon isi nama buku!' :
+      'Gagal memperbarui buku. Mohon isi nama buku' :
       // eslint-disable-next-line max-len
-      'Gagal memperbarui buku! readPage tidak boleh lebih besar dari pageCount!';
+      'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount';
     return getFailedResponseWithMessage(h, message, 400);
   }
   const bookIndex = findBookIndexById(bookId);
   if (bookIndex === -1) {
     return getFailedResponseWithMessage(
-        h, 'Gagal memperbarui buku! ID tidak ditemukan!', 404,
+        h, 'Gagal memperbarui buku. Id tidak ditemukan', 404,
     );
   }
   const updatedAt = new Date().toISOString();
@@ -42,7 +42,7 @@ const updateBookByIdHandler = (request, h) => {
     reading,
     updatedAt,
   };
-  return getSuccessResponseWithMessage(h, 'Buku berhasil diperbarui!');
+  return getSuccessResponseWithMessage(h, 'Buku berhasil diperbarui');
 };
 const findBookIndexById = (bookId) => {
   return books.findIndex((book) => book.id === bookId);
