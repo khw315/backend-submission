@@ -1,0 +1,27 @@
+{
+  "name": "backend-submission",
+  "version": "1.0.0",
+  "description": "Submission untuk BE pemula",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "start-dev": "nodemon ./src/server.js",
+    "eslint": "npx eslint ./src"
+  },
+  "keywords": [
+    "BE",
+    "submission",
+    "dicoding"
+  ],
+  "author": "FAFR",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/hapi": "^21.3.2",
+    "nanoid": "^4.0.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.47.0",
+    "eslint-config-google": "^0.14.0",
+    "nodemon": "^3.0.1"
+  }
+}
