@@ -1,12 +1,19 @@
 const createResponse = (h, status, message = '', data = null, code = 200) => {
-  const response = h.response({
+  const response = {
     status,
     message,
-    data,
-  });
-  response.code(code);
-  return response;
+  };
+
+  if (data !== null) {
+    response.data = data;
+  }
+
+  const httpResponse = h.response(response);
+  httpResponse.code(code);
+
+  return httpResponse;
 };
+
 
 module.exports = {
   getSuccessResponseWithMessage: (h, message, status = 200) =>
