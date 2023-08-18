@@ -15,7 +15,7 @@ const init = async () => {
   server.route(routes); // Use server.route() instead of server.routes()
 
   await server.start();
-  console.log(`Layanan API berjalan pada ${server.info.uri}`);
+  console.log(`Server berjalan pada ${server.info.uri}`);
 };
 
 init();

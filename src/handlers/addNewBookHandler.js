@@ -17,9 +17,8 @@ const addNewBookHandler = async (request, h) => {
   } = request.payload;
   if (!name || readPage > pageCount) {
     const message = !name ?
-      'Gagal menambahkan buku! Mohon isi nama buku!' :
-      // eslint-disable-next-line max-len
-      'Gagal menambahkan buku! readPage tidak boleh lebih besar dari pageCount';
+      'Gagal menambahkan buku. Mohon isi nama buku' :
+      'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount';
     return getFailedResponseWithMessage(h, message, 400);
   }
   let nanoid;
