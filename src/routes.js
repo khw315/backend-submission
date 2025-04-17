@@ -1,8 +1,8 @@
 const addNewBookHandler = require('./handlers/addNewBookHandler');
 const getAllBooksHandler = require('./handlers/getAllBooksHandler');
 const getBookByIdHandler = require('./handlers/getBookByIdHandler');
-const deleteBookByIdHandler = require('./handlers/deleteBookByIdHandler');
 const updateBookByIdHandler = require('./handlers/updateBookByIdHandler');
+const deleteBookByIdHandler = require('./handlers/deleteBookByIdHandler');
 
 const routes = [
   {

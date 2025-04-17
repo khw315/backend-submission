@@ -7,15 +7,20 @@ const init = async () => {
     host: 'localhost',
     routes: {
       cors: {
-        origin: ['*'],
+        origin: ['*'], // Allow all origins (can be restricted later)
       },
     },
   });
 
-  server.route(routes); // Use server.route() instead of server.routes()
+  server.route(routes);
 
-  await server.start();
-  console.log(`Server berjalan pada ${server.info.uri}`);
+  try {
+    await server.start();
+    console.log(`Server running at: ${server.info.uri}`);
+  } catch (err) {
+    console.error('Failed to start server:', err);
+    process.exit(1);
+  }
 };
 
 init();

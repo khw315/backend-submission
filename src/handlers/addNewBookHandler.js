@@ -4,6 +4,27 @@ const {
   getSuccessResponseWithMsgAndData,
 } = require('../utils/response');
 
+const validateBookPayload = ({name, readPage, pageCount}) => {
+  if (!name) {
+    return 'Gagal menambahkan buku. Mohon isi nama buku';
+  }
+  if (readPage > pageCount) {
+    return 'Gagal menambahkan buku. readPage tidak boleh lebih besar dari ' +
+           'pageCount';
+  }
+  return null;
+};
+
+const generateBookId = async () => {
+  try {
+    const {nanoid} = await import('nanoid');
+    return nanoid();
+  } catch (error) {
+    console.error('Error importing nanoid:', error);
+    throw new Error('ID_GENERATION_FAILED');
+  }
+};
+
 const addNewBookHandler = async (request, h) => {
   const {
     name,
@@ -15,27 +36,22 @@ const addNewBookHandler = async (request, h) => {
     readPage,
     reading,
   } = request.payload;
-  if (!name || readPage > pageCount) {
-    const message = !name ?
-      'Gagal menambahkan buku. Mohon isi nama buku' :
-      'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount';
-    return getFailedResponseWithMessage(h, message, 400);
+
+  const validationError = validateBookPayload({name, readPage, pageCount});
+  if (validationError) {
+    return getFailedResponseWithMessage(h, validationError, 400);
   }
-  let nanoid;
+
+  let id;
   try {
-    const nanoidModule = await import('nanoid');
-    nanoid = nanoidModule.nanoid;
-  } catch (error) {
-    console.error('Error importing nanoid:', error);
-    return getFailedResponseWithMessage(
-        h,
-        'Internal server error!',
-        500,
-    );
+    id = await generateBookId();
+  } catch {
+    return getFailedResponseWithMessage(h, 'Internal server error!', 500);
   }
-  const id = nanoid();
-  const currentISODate = new Date().toISOString();
+
+  const timestamp = new Date().toISOString();
   const finished = pageCount === readPage;
+
   const newBook = {
     id,
     name,
@@ -47,11 +63,14 @@ const addNewBookHandler = async (request, h) => {
     readPage,
     reading,
     finished,
-    insertedAt: currentISODate,
-    updatedAt: currentISODate,
+    insertedAt: timestamp,
+    updatedAt: timestamp,
   };
-  const newLength = books.push(newBook);
-  if (books.length === newLength) {
+
+  const initialLength = books.length;
+  books.push(newBook);
+
+  if (books.length > initialLength) {
     return getSuccessResponseWithMsgAndData(
         h,
         'Buku berhasil ditambahkan',
@@ -59,6 +78,7 @@ const addNewBookHandler = async (request, h) => {
         201,
     );
   }
+
   return h.response({
     status: 'error',
     message: 'Catatan gagal ditambahkan',

@@ -4,6 +4,20 @@ const {
   getSuccessResponseWithMessage,
 } = require('../utils/response');
 
+const findBookIndexById = (bookId) =>
+  books.findIndex((book) => book.id === bookId);
+
+const validateBookPayload = ({name, readPage, pageCount}) => {
+  if (!name) {
+    return 'Gagal memperbarui buku. Mohon isi nama buku';
+  }
+  if (readPage > pageCount) {
+    return 'Gagal memperbarui buku. readPage tidak boleh lebih besar ' +
+           'dari pageCount';
+  }
+  return null;
+};
+
 const updateBookByIdHandler = (request, h) => {
   const {bookId} = request.params;
   const {
@@ -16,20 +30,21 @@ const updateBookByIdHandler = (request, h) => {
     readPage,
     reading,
   } = request.payload;
-  if (!name || readPage > pageCount) {
-    const message = !name ?
-      'Gagal memperbarui buku. Mohon isi nama buku' :
-      // eslint-disable-next-line max-len
-      'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount';
-    return getFailedResponseWithMessage(h, message, 400);
+
+  const validationError = validateBookPayload({name, readPage, pageCount});
+  if (validationError) {
+    return getFailedResponseWithMessage(h, validationError, 400);
   }
+
   const bookIndex = findBookIndexById(bookId);
   if (bookIndex === -1) {
     return getFailedResponseWithMessage(
-        h, 'Gagal memperbarui buku. Id tidak ditemukan', 404,
+        h,
+        'Gagal memperbarui buku. Id tidak ditemukan',
+        404,
     );
   }
-  const updatedAt = new Date().toISOString();
+
   books[bookIndex] = {
     ...books[bookIndex],
     name,
@@ -40,12 +55,10 @@ const updateBookByIdHandler = (request, h) => {
     pageCount,
     readPage,
     reading,
-    updatedAt,
+    updatedAt: new Date().toISOString(),
   };
+
   return getSuccessResponseWithMessage(h, 'Buku berhasil diperbarui');
-};
-const findBookIndexById = (bookId) => {
-  return books.findIndex((book) => book.id === bookId);
 };
 
 module.exports = updateBookByIdHandler;
